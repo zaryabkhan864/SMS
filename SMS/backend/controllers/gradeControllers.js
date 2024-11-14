@@ -42,7 +42,7 @@ export const getGradeDetails = catchAsyncErrors(async (req, res, next) => {
 // Update grade details   =>  /api/v1/grades/:id
 export const updateGrade = catchAsyncErrors(async (req, res) => {
     let grade = await Grade.findById(req?.params?.id);
-
+    console.log("what grade is coming here",grade)
     if (!grade) {
         return next(new ErrorHandler("Grade not found", 404));
     }

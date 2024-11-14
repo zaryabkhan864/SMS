@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Header from '../Dashboard/Header'
+
 import Sidebar from '../Dashboard/Sidebar'
-import CourseList from './CourseList'
+
+import QuizByGrade from './Quiz/QuizByGrade'
 
 
-const Course = () => {
+const QuizByGradeMain = () => {
     const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
 
     const OpenSidebar = () => {
@@ -14,10 +16,13 @@ const Course = () => {
         <div className='grid-container'>
             <Header OpenSidebar={OpenSidebar} />
             <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-            <CourseList />
-
+        <div className='main-container'>
+    
+                <QuizByGrade />
+        </div>
+           
         </div>
     )
 }
 
-export default Course
+export default QuizByGradeMain

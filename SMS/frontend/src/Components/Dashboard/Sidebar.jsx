@@ -40,7 +40,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
                     </NavLink>
                 </li>
                 <li className='sidebar-list-item'>
-                    <NavLink to="/quiz">
+                    <NavLink to="/add_quiz">
                         <BsPeopleFill className='icon' /> Quiz
                     </NavLink>
                 </li>
@@ -65,7 +65,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
                 )}
                 {userRole === "admin" && (
                     <li className='sidebar-list-item'>
-                        <NavLink to="/admin/new_user">
+                        <NavLink to="/admin/user_list">
                             <BsPeopleFill className='icon' /> New User
                         </NavLink>
                     </li>

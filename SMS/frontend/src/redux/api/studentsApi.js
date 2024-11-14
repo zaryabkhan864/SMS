@@ -6,8 +6,7 @@ export const studentApi = createApi({
   tagTypes: ["Student", "AdminStudents", "Reviews"],
   endpoints: (builder) => ({
     getStudents: builder.query({
-      query: () => "/students"
-
+      query: () => "/students",
     }),
     getStudentDetails: builder.query({
       query: (id) => `/students/${id}`,
@@ -34,6 +33,15 @@ export const studentApi = createApi({
       },
       invalidatesTags: ["Student", "AdminStudents"],
     }),
+    deleteStudent: builder.mutation({
+      query(id) {
+        return {
+          url: `/admin/students/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["AdminStudents"],
+    }),
     // uploadProductImages: builder.mutation({
     //   query({ id, body }) {
     //     return {
@@ -54,15 +62,7 @@ export const studentApi = createApi({
     //   },
     //   invalidatesTags: ["Product"],
     // }),
-    deleteStudent: builder.mutation({
-      query(id) {
-        return {
-          url: `/admin/students/${id}`,
-          method: "DELETE",
-        };
-      },
-      invalidatesTags: ["AdminStudents"],
-    }),
+   
 
   }),
 });
@@ -72,7 +72,8 @@ export const {
   useGetStudentDetailsQuery,
   useCreateStudentMutation,
   useUpdateStudentMutation,
+  useDeleteStudentMutation,
   // useUploadProductImagesMutation,
   // useDeleteProductImageMutation,
-  useDeleteStudentMutation,
+
 } = studentApi;

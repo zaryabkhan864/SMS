@@ -19,8 +19,9 @@ const router = express.Router();
 import { authorizeRoles, isAuthenticatedUser } from "../middlewares/auth.js";
 
 // only admin can add user
-router.route("/admin/register").post(isAuthenticatedUser, authorizeRoles("admin"), registerUser);
+// router.route("/admin/register").post(isAuthenticatedUser, authorizeRoles("admin"), registerUser);
 
+router.route("/admin/register").post(registerUser);
 
 
 router.route("/login").post(loginUser);

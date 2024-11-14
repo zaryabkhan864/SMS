@@ -6,16 +6,16 @@ import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import Loader from "../layout/Loader";
 import { useDeleteUserMutation, useGetAdminUsersQuery } from "../../redux/api/userApi";
-import { useDeleteCourseMutation, useGetCoursesQuery } from "../../redux/api/courseApi";
 
-const CourseList = () => {
+const NewUserList = () => {
     const userRole = Cookies.get("userRole");
-    const { data, isLoading, error, refetch } = useGetCoursesQuery();
+    
+    const { data, isLoading, error } = useGetAdminUsersQuery();
 
     const [
-        deleteCourse,
+        deleteUser,
         { isLoading: isDeleteLoading, error: deleteError, isSuccess },
-    ] = useDeleteCourseMutation();
+    ] = useDeleteUserMutation();
 
     useEffect(() => {
         if (error) {
@@ -27,40 +27,33 @@ const CourseList = () => {
         }
 
         if (isSuccess) {
-            toast.success("Course Deleted Successfully");
-            refetch();
-
+            toast.success("User Deleted Successfully");
         }
     }, [error, deleteError, isSuccess, data]);
 
-    const deleteCourseHandler = (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+    const deleteUserHandler = (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
         if (confirmDelete) {
-            deleteCourse(id);
+            deleteUser(id);
         }
     };
 
-    const setCourses = () => {
-        const courses = {
+    const setUsers = () => {
+        const users = {
             columns: [
                 {
                     label: "Name",
-                    field: "courseName",
+                    field: "name",
                     sort: "asc",
                 },
                 {
-                    label: "Description",
-                    field: "description",
+                    label: "Role",
+                    field: "role",
                     sort: "asc",
                 },
                 {
-                    label: "Code",
-                    field: "code",
-                    sort: "asc",
-                },
-                {
-                    label: "Year",
-                    field: "year",
+                    label: "Email",
+                    field: "email",
                     sort: "asc",
                 },
                 {
@@ -72,25 +65,29 @@ const CourseList = () => {
             rows: [],
         };
 
-        data?.courses?.forEach((course) => {
-            courses.rows.push({
-                id: course?._id,
-                courseName: course?.courseName,
-                description: course?.description,
-                code: course?.code,
-                year: course?.year,
+        data?.users?.forEach((user) => {
+            users.rows.push({
+                id: user?._id,
+                name: user?.name,
+                role: user?.role,
+                email: user?.email,
                 actions: (
                     <>
                         <Link
-                            to={`/admin/update_courses/${course?._id}`}
+                            to={`/admin/update_users/${user?._id}`}
                             className="btn btn-outline-primary"
                         >
                             <i className="fa fa-pencil"></i>
                         </Link>
-
+                        <Link
+                            to={`/admin/users/${user?._id}/upload_images`}
+                            className="btn btn-outline-success ms-2"
+                        >
+                            <i className="fa fa-image"></i>
+                        </Link>
                         <button
                             className="btn btn-outline-danger ms-2"
-                            onClick={() => deleteCourseHandler(course?._id)}
+                            onClick={() => deleteUserHandler(user?._id)}
                             disabled={isDeleteLoading}
                         >
                             <i className="fa fa-trash"></i>
@@ -100,7 +97,7 @@ const CourseList = () => {
             });
         });
 
-        return courses;
+        return users;
     };
 
     if (isLoading) return <Loader />;
@@ -108,18 +105,18 @@ const CourseList = () => {
     return (
         <main className='main-container'>
             <div className='main-title mb-3'>
-                <h3>{data?.courses?.length} Course</h3>
+                <h3>{data?.users?.length} Users</h3>
                 {
                     userRole === "admin" && (
-                        <NavLink to="/admin/add_course">
-                            Add Course
+                        <NavLink to="/admin/add_user">
+                            Add User
                         </NavLink>
                     )
                 }
             </div>
             <div>
                 <MDBDataTable
-                    data={setCourses()}
+                    data={setUsers()}
                     className="px-3"
                     bordered
                     striped
@@ -130,4 +127,4 @@ const CourseList = () => {
     );
 };
 
-export default CourseList;
+export default NewUserList;

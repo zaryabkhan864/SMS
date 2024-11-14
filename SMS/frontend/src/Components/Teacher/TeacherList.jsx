@@ -1,19 +1,18 @@
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Link, NavLink } from 'react-router-dom';
-// import Loader from "../layout/Loader";
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { MDBDataTable } from "mdbreact";
-// import MetaData from "../layout/MetaData";
 import { useDeleteTeacherMutation, useGetTeachersQuery } from '../../redux/api/teachersApi';
 import Loader from "../layout/Loader";
+
 const TeacherList = () => {
-    const { data, isLoading, error } = useGetTeachersQuery();
+    const { data, isLoading, error, refetch } = useGetTeachersQuery();
+    const location = useLocation();
 
     const [
         deleteTeacher,
         { isLoading: isDeleteLoading, error: deleteError, isSuccess },
     ] = useDeleteTeacherMutation();
-
 
     useEffect(() => {
         if (error) {
@@ -26,11 +25,22 @@ const TeacherList = () => {
 
         if (isSuccess) {
             toast.success("Teacher Deleted");
+            refetch();  // Refetch the data after successful deletion
         }
-    }, [error, deleteError, isSuccess, data]);
+
+        // Refetch if new teacher added or updated
+        if (location.state?.newTeacherAdded || location.state?.updated) {
+            refetch();
+            // Clear the state after refetch
+            window.history.replaceState({}, document.title);
+        }
+    }, [error, deleteError, isSuccess, refetch, location.state]);
 
     const deleteTeacherHandler = (id) => {
-        deleteTeacher(id);
+        const confirmDelete = window.confirm("Are you sure you want to delete this teacher?");
+        if (confirmDelete) {
+            deleteTeacher(id);
+        }
     };
 
     const setTeachers = () => {
@@ -61,13 +71,11 @@ const TeacherList = () => {
                     field: "nationality",
                     sort: "asc",
                 },
-
                 {
                     label: "Teacher #",
                     field: "teacherPhoneNumber",
                     sort: "asc",
                 },
-
                 {
                     label: "Actions",
                     field: "actions",
@@ -84,10 +92,7 @@ const TeacherList = () => {
                 age: teacher?.age,
                 gender: teacher?.gender,
                 nationality: teacher?.nationality,
-
                 teacherPhoneNumber: teacher?.teacherPhoneNumber,
-                teacherSecondPhoneNumber: teacher?.teacherSecondPhoneNumber,
-
                 actions: (
                     <>
                         <Link
@@ -122,8 +127,6 @@ const TeacherList = () => {
     return (
         <main className='main-container'>
             <div className='main-title mb-3'>
-                {/* <MetaData title={"All Students"} /> */}
-
                 <h3>{data?.teachers?.length} Teacher</h3>
                 <NavLink to="/admin/add_teacher">
                     Add Teacher
@@ -138,8 +141,6 @@ const TeacherList = () => {
                     hover
                 />
             </div>
-
-
         </main>
     );
 };

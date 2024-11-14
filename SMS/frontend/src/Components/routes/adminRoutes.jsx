@@ -10,18 +10,39 @@ import StudentAdd from "../Student/StudentAdd";
 import StudentUpdate from "../Student/StudentUpdate";
 import TeacherAdd from "../Teacher/TeacherAdd";
 import TeacherUpdate from "../Teacher/TeacherUpdate";
-import NewUser_Layout from "../User/NewUser_Layout";
+import NewUser_Layout from "../User/NewUser";
+import NewUser from "../User/NewUser_Add";
+import NewUserAdd from "../User/NewUserAdd";
+import NewUserUpdate from "../User/NewUserUpdate";
 
 
 
 const adminRoutes = () => {
   return (
     <>
+
       <Route
-        path="/admin/new_user"
+        path="/admin/user_list"
         element={
           <ProtectedRoute admin={true}>
             <NewUser_Layout />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/add_user"
+        element={
+          <ProtectedRoute admin={true}>
+            <NewUserAdd />
+          </ProtectedRoute>
+        }
+      />
+      {/* to={`/admin/update_users/${user?._id}`} */}
+      <Route
+        path="/admin/update_users/:id"
+        element={
+          <ProtectedRoute admin={true}>
+            <NewUserUpdate />
           </ProtectedRoute>
         }
       />

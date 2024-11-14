@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import Header from '../Dashboard/Header'
 import Sidebar from '../Dashboard/Sidebar'
-import CourseList from './CourseList'
+import UpdateNewUser from './NewUser_Update'
 
-
-const Course = () => {
+const NewUserUpdate = () => {
     const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
 
     const OpenSidebar = () => {
@@ -14,10 +13,9 @@ const Course = () => {
         <div className='grid-container'>
             <Header OpenSidebar={OpenSidebar} />
             <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
-            <CourseList />
-
+            <UpdateNewUser />
         </div>
     )
 }
 
-export default Course
+export default NewUserUpdate

@@ -12,6 +12,7 @@ import Quiz from "../Quiz/Quiz";
 import QuizAdd from "../Quiz/QuizAdd";
 import QuizByGrade from "../Reports/Quiz/QuizByGrade";
 import Reports from "../Reports/Reports";
+import QuizByGradeMain from "../Reports/QuizByGradeMain";
 
 
 
@@ -27,7 +28,7 @@ const userRoutes = () => {
       <Route path="/courses" element={<Course />} />
       <Route path="/quiz" element={<Quiz />} />
       <Route path="/add_quiz" element={<QuizAdd />} />
-      <Route path="/QuizByGrade" element={<QuizByGrade />} />
+      <Route path="/QuizByGradeMain" element={<QuizByGradeMain />} />
       <Route path="/reports" element={<Reports />} />
     </>
 

@@ -1,26 +1,23 @@
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Link, NavLink } from 'react-router-dom';
-// import Loader from "../layout/Loader";
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { MDBDataTable } from "mdbreact";
-import { useSelector } from 'react-redux';
-// import MetaData from "../layout/MetaData";
 import { useDeleteStudentMutation, useGetStudentsQuery } from '../../redux/api/studentsApi';
-import Cookies from "js-cookie";
 import Loader from "../layout/Loader";
+
 const StudentList = () => {
-
-    // get the userRole from cookie
-    const userRole = Cookies.get("userRole");
-
-    const { data, isLoading, error } = useGetStudentsQuery();
-
+    const { data, isLoading, error, refetch } = useGetStudentsQuery();
+    const location = useLocation();
 
     const [
         deleteStudent,
         { isLoading: isDeleteLoading, error: deleteError, isSuccess },
     ] = useDeleteStudentMutation();
 
+    useEffect(() => {
+        // Refetch the data when the component loads
+        refetch();
+    }, []); // Empty dependency array means this will run only once when the component mounts
 
     useEffect(() => {
         if (error) {
@@ -33,21 +30,32 @@ const StudentList = () => {
 
         if (isSuccess) {
             toast.success("Student Deleted");
+            refetch();  // Refetch the data after successful deletion
         }
-    }, [error, deleteError, isSuccess, data]);
+
+        // Refetch if new student added
+        if (location.state?.newStudentAdded) {
+            refetch();
+            // Clear the state after refetch
+            window.history.replaceState({}, document.title)
+        }
+    }, [error, deleteError, isSuccess, refetch, location.state]);
 
     const deleteStudentHandler = (id) => {
-        deleteStudent(id);
+        const confirmDelete = window.confirm("Are you sure you want to delete this Student?");
+        if (confirmDelete) {
+            deleteStudent(id);
+        }
     };
 
     const setStudents = () => {
         const students = {
             columns: [
-                // {
-                //     label: "ID",
-                //     field: "id",
-                //     sort: "asc",
-                // },
+                {
+                    label: "ID",
+                    field: "id",
+                    sort: "asc",
+                },
                 {
                     label: "Name",
                     field: "studentName",
@@ -56,6 +64,11 @@ const StudentList = () => {
                 {
                     label: "Age",
                     field: "age",
+                    sort: "asc",
+                },
+                {
+                    label: "Grade",
+                    field: "grade",
                     sort: "asc",
                 },
                 {
@@ -69,23 +82,8 @@ const StudentList = () => {
                     sort: "asc",
                 },
                 {
-                    label: "Grade",
-                    field: "grade",
-                    sort: "asc",
-                },
-                {
-                    label: "Teacher",
-                    field: "classTeacher",
-                    sort: "asc",
-                },
-                {
                     label: "Student #",
                     field: "studentPhoneNumber",
-                    sort: "asc",
-                },
-                {
-                    label: "Parents #",
-                    field: "parentOnePhoneNumber",
                     sort: "asc",
                 },
                 {
@@ -102,12 +100,10 @@ const StudentList = () => {
                 id: student?._id,
                 studentName: student?.studentName,
                 age: student?.age,
+                grade: student?.grade?.gradeName,
                 gender: student?.gender,
                 nationality: student?.nationality,
-                grade: student?.grade?.gradeName,
-                classTeacher: student?.classTeacher,
                 studentPhoneNumber: student?.studentPhoneNumber,
-                parentOnePhoneNumber: student?.parentOnePhoneNumber,
                 actions: (
                     <>
                         <Link
@@ -142,17 +138,10 @@ const StudentList = () => {
     return (
         <main className='main-container'>
             <div className='main-title mb-3'>
-                {/* <MetaData title={"All Students"} /> */}
-
-                <h3>{data?.students?.length} Students</h3>
-                {
-                    userRole === "admin" && (
-                        <NavLink to="/admin/add_student">
-                            Add Student
-                        </NavLink>
-                    )
-                }
-
+                <h3>{data?.students?.length} Student</h3>
+                <NavLink to="/admin/add_student">
+                    Add Student
+                </NavLink>
             </div>
             <div>
                 <MDBDataTable
@@ -163,8 +152,6 @@ const StudentList = () => {
                     hover
                 />
             </div>
-
-
         </main>
     );
 };

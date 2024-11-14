@@ -40,17 +40,24 @@
 }
 
 #project span {
-  color: #5d6975;
-  text-align: right;
-  width: 52px;
-  margin-right: 10px;
-  display: inline-block;
-  font-size: 0.8em;
+    color: #5d6975;
+      text-align: left;
+      width: 54px;
+      margin-right: 10px;
+      display: inline-block;
+      font-size: 1em;
+      line-height: 2em;
 }
 
 #company {
   float: right;
-  text-align: right;
+      color: #5d6975;
+        text-align: left;
+        width: 54px;
+        margin-right: 10px;
+        display: inline-block;
+        font-size: 1em;
+        line-height: 2em;
 }
 
 #project div,
@@ -84,18 +91,19 @@
 
 .order-invoice table .service,
 .order-invoice table .desc {
-  text-align: left;
+  text-align: center;
 }
 
 .order-invoice table td {
   padding: 20px;
-  text-align: right;
+  text-align: center;
 }
 
 .order-invoice table td.service,
 .order-invoice table td.desc {
   vertical-align: top;
 }
+
 
 .order-invoice table td.unit,
 .order-invoice table td.qty,
@@ -107,6 +115,9 @@
   border-top: 1px solid #5d6975;
 }
 
+.order-invoice .total{
+  background-color: #d9d2d2;
+}
 #notices .notice {
   color: #5d6975;
   font-size: 1.2em;

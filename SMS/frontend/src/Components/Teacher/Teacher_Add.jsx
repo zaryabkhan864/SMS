@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCreateTeacherMutation } from '../../redux/api/teachersApi';
 import { toast } from 'react-hot-toast';
-import { useCountries } from 'react-countries'
+import { useCountries } from 'react-countries';
 import {
     useGetCoursesQuery,
 } from '../../redux/api/courseApi';
 
 const Teacher_Add = () => {
     const navigate = useNavigate();
-    const { countries } = useCountries()
+    const { countries } = useCountries();
     const { data } = useGetCoursesQuery();
 
     const { courses } = data || {};
@@ -33,9 +33,9 @@ const Teacher_Add = () => {
         }
         if (isSuccess) {
             toast.success('Teacher Added...');
-            navigate('/teachers');
+            navigate('/teachers', { state: { newTeacherAdded: true } });  // Pass state
         }
-    }, [error, isSuccess]);
+    }, [error, isSuccess, navigate]);
 
     const onChange = (e) => {
         setTeacher({ ...teacher, [e.target.name]: e.target.value });
@@ -77,8 +77,7 @@ const Teacher_Add = () => {
 
             <h3>New Teacher</h3>
             <div>
-                <form className="shadow rounded bg-body p-5"
-                    onSubmit={submitHandler}>
+                <form className="shadow rounded bg-body p-5" onSubmit={submitHandler}>
 
                     <div className="mb-3">
                         <label htmlFor="teacherName_field" className="form-label">
@@ -226,7 +225,7 @@ const Teacher_Add = () => {
                 </form>
             </div>
         </main>
-    )
+    );
 }
 
-export default Teacher_Add
+export default Teacher_Add;

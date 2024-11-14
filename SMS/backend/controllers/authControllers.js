@@ -6,6 +6,7 @@ import sendToken from "../utils/sendToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
 import { delete_file, upload_file } from "../utils/cloudinary.js";
+import bcrypt from 'bcryptjs'; // Import bcrypt for password hashing
 
 // Register user   =>  /api/v1/register
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -46,7 +47,7 @@ export const loginUser = catchAsyncErrors(async (req, res, next) => {
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
-console.log("what is zi",user)
+  console.log("what is zi", user)
   sendToken(user, 200, res);
 });
 
@@ -224,21 +225,55 @@ export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Update User Details - ADMIN  =>  /api/v1/admin/users/:id
+// Controller function to update user details
 export const updateUser = catchAsyncErrors(async (req, res, next) => {
+  // Create a new object with the updated user data
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
     role: req.body.role,
   };
 
+  // Check if the request includes a new password
+  if (req.body.password) {
+    // Hash the new password
+    const newPassword = await bcrypt.hash(req.body.password, 10);
+    // Update the newUserData object with the hashed password
+    newUserData.password = newPassword;
+  }
+
+  // Find the user by ID and update their details
   const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
-    new: true,
+    new: true, // Return the updated user data
+    runValidators: true, // Run validators to ensure the updated data is valid
   });
 
-  res.status(200).json({
-    user,
-  });
+  // If user is not found, return an error
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+
+  // If user is found, send the updated user data in the response
+  res.status(200).json({ success: true, data: user });
 });
+// export const updateUser = catchAsyncErrors(async (req, res, next) => {
+
+//   const newUserData = {
+//     name: req.body.name,
+//     email: req.body.email,
+//     password: req.body.password,
+//     role: req.body.role,
+
+//   };
+//   console.log(" password: req.body.password,", req.body.password)
+//   const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+//     new: true,
+//   });
+
+//   res.status(200).json({
+//     user,
+//   });
+// });
 
 // Delete User - ADMIN  =>  /api/v1/admin/users/:id
 export const deleteUser = catchAsyncErrors(async (req, res, next) => {

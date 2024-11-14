@@ -7,6 +7,10 @@ export const courseApi = createApi({
             query: () => "/courses"
 
         }),
+        getCourseDetails: builder.query({
+            query: (id) => `/admin/courses/${id}`,
+            providesTags: ["Course"],
+        }),
         createCourse: builder.mutation({
             query(body) {
                 return {

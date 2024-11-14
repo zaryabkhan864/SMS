@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteGrade, getGrades, newGrade, updateGrade } from "../controllers/gradeControllers.js";
+import { deleteGrade, getGradeDetails, getGrades, newGrade, updateGrade } from "../controllers/gradeControllers.js";
 import { authorizeRoles, isAuthenticatedUser } from "../middlewares/auth.js"
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.route("/admin/grades")
 router.route("/admin/grades/:id")
     .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteGrade);
 router.route("/admin/grades/:id")
+    .get(isAuthenticatedUser, authorizeRoles("admin"), getGradeDetails)
     .put(isAuthenticatedUser, authorizeRoles("admin"), updateGrade);
 
 

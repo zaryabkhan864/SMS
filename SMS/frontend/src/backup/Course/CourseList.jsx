@@ -5,12 +5,12 @@ import { MDBDataTable } from "mdbreact";
 import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import Loader from "../layout/Loader";
-import { useDeleteUserMutation, useGetAdminUsersQuery } from "../../redux/api/userApi";
+
 import { useDeleteCourseMutation, useGetCoursesQuery } from "../../redux/api/courseApi";
 
 const CourseList = () => {
     const userRole = Cookies.get("userRole");
-    const { data, isLoading, error, refetch } = useGetCoursesQuery();
+    const { data, isLoading, error, refetch } = useGetCoursesQuery(); // Destructure refetch from useGetCoursesQuery
 
     const [
         deleteCourse,
@@ -28,10 +28,9 @@ const CourseList = () => {
 
         if (isSuccess) {
             toast.success("Course Deleted Successfully");
-            refetch();
-
+            refetch(); // Manually refetch data after successful deletion
         }
-    }, [error, deleteError, isSuccess, data]);
+    }, [error, deleteError, isSuccess, refetch]); // Add refetch to the dependency array
 
     const deleteCourseHandler = (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this course?");
@@ -87,7 +86,6 @@ const CourseList = () => {
                         >
                             <i className="fa fa-pencil"></i>
                         </Link>
-
                         <button
                             className="btn btn-outline-danger ms-2"
                             onClick={() => deleteCourseHandler(course?._id)}

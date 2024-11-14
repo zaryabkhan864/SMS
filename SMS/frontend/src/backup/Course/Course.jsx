@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../Dashboard/Header'
-import Sidebar from '../Dashboard/Sidebar'
 import CourseList from './CourseList'
-
+import Sidebar from '../Dashboard/Sidebar'
 
 const Course = () => {
     const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
@@ -15,7 +14,6 @@ const Course = () => {
             <Header OpenSidebar={OpenSidebar} />
             <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} />
             <CourseList />
-
         </div>
     )
 }

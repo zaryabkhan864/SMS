@@ -36,7 +36,11 @@ export const gradeApi = createApi({
                     method: "DELETE",
                 };
             },
-        })
+        }),
+        getGradeDetails: builder.query({
+            query: (id) => `/admin/grades/${id}`,
+            providesTags: ["Course"],
+        }),
     })
 });
 export const {

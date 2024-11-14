@@ -1,4 +1,4 @@
-        import mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema(
     {
@@ -13,6 +13,14 @@ const quizSchema = new mongoose.Schema(
             required: true,
             ref: "Course",
         },
+        semester: {
+            type: Number,
+            required: true,
+        },
+        term: {
+            type: Number,
+            required: true,
+        },
         quizNumber: {
             type: Number,
             required: true,
@@ -26,22 +34,27 @@ const quizSchema = new mongoose.Schema(
             question1: {
                 type: Number,
                 required: true,
+                default: 0,
             },
             question2: {
                 type: Number,
                 required: true,
+                default: 0,
             },
             question3: {
                 type: Number,
                 required: true,
+                default: 0,
             },
             question4: {
                 type: Number,
                 required: true,
+                default: 0,
             },
             question5: {
                 type: Number,
                 required: true,
+                default: 0,
             },
         }],
     },

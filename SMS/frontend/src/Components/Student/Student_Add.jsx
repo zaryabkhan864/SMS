@@ -7,8 +7,10 @@ import {
 } from '../../redux/api/gradeApi';
 
 import { useCountries } from 'react-countries'
+import { useGetTeachersQuery } from '../../redux/api/teachersApi';
 const Student_Add = () => {
     const navigate = useNavigate();
+    const { data: teacherData } = useGetTeachersQuery();
     const { countries } = useCountries()
     const { data: gradesData } = useGetGradesQuery();
 
@@ -19,13 +21,15 @@ const Student_Add = () => {
         gender: "",
         nationality: "",
         grade: "",
-        classTeacher: "",
+        // classTeacher: "",
         studentPhoneNumber: "",
         parentOnePhoneNumber: "",
         parentTwoPhoneNumber: "",
 
     });
-    const { studentName, age, gender, grade, nationality, classTeacher, studentPhoneNumber, parentOnePhoneNumber, parentTwoPhoneNumber } = student;
+    const { studentName, age, gender, grade, nationality,
+        //  classTeacher,
+          studentPhoneNumber, parentOnePhoneNumber, parentTwoPhoneNumber } = student;
     const [createStudent, { isLoading, error, isSuccess }] =
         useCreateStudentMutation();
     useEffect(() => {
@@ -52,7 +56,7 @@ const Student_Add = () => {
             gender,
             grade,
             nationality,
-            classTeacher,
+            // classTeacher,
             studentPhoneNumber,
             parentOnePhoneNumber,
             parentTwoPhoneNumber,
@@ -85,7 +89,7 @@ const Student_Add = () => {
                     <div className="mb-3 col">
                         <label htmlFor="age_field" className="form-label">
                             {" "}
-                            age{" "}
+                            Age{" "}
                         </label>
                         <input
                             type="number"
@@ -111,6 +115,7 @@ const Student_Add = () => {
                                 value={gender}
                                 onChange={onChange}
                             >
+                                <option value="">Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
@@ -120,6 +125,7 @@ const Student_Add = () => {
                                 {" "}
                                 Nationality{" "}
                             </label>
+
                             <select
                                 className="form-select"
                                 id="nationality_field"
@@ -133,6 +139,7 @@ const Student_Add = () => {
                                     code,
                                     flag
                                 }) => (
+
                                     <option key={name} value={name}>
                                         {name}
                                     </option>
@@ -140,22 +147,48 @@ const Student_Add = () => {
                             </select>
                         </div>
                     </div>
-                    <div className='row'>
 
+                    <div className="row">
                         <div className="mb-3 col">
-                            <label htmlFor=" classTeacher_field" className="form-label">
+                            <label htmlFor="grade_field" className="form-label">
+                                {" "}
+                                Grade{" "}
+                            </label>
+                            <select
+                                className="form-select"
+                                id="grade_field"
+                                name="grade"
+                                value={grade}
+                                onChange={onChange}
+                            >
+                                <option value="">Select Grade</option>
+                                {gradesData?.grades && gradesData.grades?.map((grade) => (
+                                    <option key={grade._id} value={grade._id}>
+                                        {grade.gradeName}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {/* <div className="mb-3 col">
+                            <label htmlFor="classTeacher_field" className="form-label">
                                 {" "}
                                 Class Teacher{" "}
                             </label>
-                            <input
-                                type="text"
+                            <select
+                                className="form-select"
                                 id="classTeacher_field"
-                                className="form-control"
                                 name="classTeacher"
                                 value={classTeacher}
                                 onChange={onChange}
-                            />
-                        </div>
+                            >
+                                <option value="">Select Class Teacher</option>
+                                {teacherData?.teachers && teacherData.teachers?.map((teacher) => (
+                                    <option key={teacher._id} value={teacher._id}>
+                                        {teacher.teacherName}
+                                    </option>
+                                ))}
+                            </select>
+                        </div> */}
                     </div>
                     <div className="row">
                         <div className="mb-3 col">
@@ -200,29 +233,6 @@ const Student_Add = () => {
                                 onChange={onChange}
                             />
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="mb-3 col">
-                            <label htmlFor="grade_field" className="form-label">
-                                {" "}
-                                Grade{" "}
-                            </label>
-                            <select
-                                className="form-select"
-                                id="grade_field"
-                                name="grade"
-                                value={grade}
-                                onChange={onChange}
-                            >
-                                <option value="">Select Grade</option>
-                                {gradesData?.grades && gradesData.grades?.map((grade) => (
-                                    <option key={grade._id} value={grade._id}>
-                                        {grade.gradeName}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
                     </div>
                     <button
                         type="submit"

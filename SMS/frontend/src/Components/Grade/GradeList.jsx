@@ -1,33 +1,32 @@
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { MDBDataTable } from "mdbreact";
-// import MetaData from "../layout/MetaData";
 import { useDeleteGradeMutation, useGetGradesQuery } from '../../redux/api/gradeApi';
 import Loader from "../layout/Loader";
+
 const GradeList = () => {
-    const { data, isLoading, error } = useGetGradesQuery();
-    const { refetch } = useGetGradesQuery();
-    const [searchParams] = useSearchParams();
-
+    const { data, isLoading, error, refetch: getDataRefetch } = useGetGradesQuery();
+    const location = useLocation();
     const navigate = useNavigate();
-
-    const gradeSuccess = searchParams.get("grade_success");
 
     const [
         deleteGrade,
-        { isLoading: isDeleteLoading, error: deleteError, isSuccess },
+        { isLoading: isDeleteLoading, error: deleteError, isSuccess, refetch: deleteRefetch },
     ] = useDeleteGradeMutation();
-
 
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message);
         }
 
-        if (gradeSuccess) {
-            navigate("/grades");
+        if (location.state?.refetch) {
+            getDataRefetch();
+            navigate(location.pathname, { replace: true, state: {} }); // Clear refetch state after refetching
+        }
+
+        if (deleteRefetch) {
+            getDataRefetch();
         }
 
         if (deleteError) {
@@ -36,11 +35,9 @@ const GradeList = () => {
 
         if (isSuccess) {
             toast.success("Grade Deleted");
-
-            refetch();
-
+            getDataRefetch();
         }
-    }, [error, deleteError, isSuccess, data]);
+    }, [error, deleteError, isSuccess, location, navigate]);
 
     const deleteGradeHandler = (id) => {
         deleteGrade(id);
@@ -79,7 +76,6 @@ const GradeList = () => {
                     field: "actions",
                     sort: "asc",
                 },
-
             ],
             rows: [],
         };
@@ -120,17 +116,10 @@ const GradeList = () => {
     return (
         <main className='main-container'>
             <div className='main-title mb-3'>
-
-
                 <h3>{data?.grades?.length} Grades</h3>
-                {/* {
-                    user.role === "admin" && ( */}
                 <NavLink to="/admin/add_grade">
                     Add Grade
                 </NavLink>
-                {/* )
-                } */}
-
             </div>
             <div className="text-center">
                 <MDBDataTable
@@ -141,8 +130,6 @@ const GradeList = () => {
                     hover
                 />
             </div>
-
-
         </main>
     );
 };

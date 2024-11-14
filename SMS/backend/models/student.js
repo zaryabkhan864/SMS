@@ -32,10 +32,11 @@ const studentSchema = new mongoose.Schema(
         },
       },
     ],
-    classTeacher: {
-      type: String,
-      required: [true, "Please enter class teacher"],
-    },
+    // classTeacher: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: [true, "Please enter class teacher"],
+    //   ref: 'Teacher'
+    // },
     studentPhoneNumber: {
       type: Number,
       required: [true, "Please Enter the student number"],

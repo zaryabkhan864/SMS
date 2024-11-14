@@ -7,7 +7,8 @@ import { delete_file, upload_file } from "../utils/cloudinary.js";
 
 // get all Students  =>  /api/v1/students
 export const getStudents = catchAsyncErrors(async (req, res, next) => {
-  const students = await Student.find().populate('grade');
+  const students = await Student.find().populate('grade')
+  // .populate({ path: 'classTeacher', select: 'teacherName' });
   res.status(200).json({
     students,
   });
@@ -25,9 +26,9 @@ export const newStudent = catchAsyncErrors(async (req, res) => {
 
 // Get single student details   =>  /api/v1/students/:id
 export const getStudentDetails = catchAsyncErrors(async (req, res, next) => {
-
-  const student = await Student.findById(req?.params?.id).populate('courses').populate('grade');
-
+  console.log("controller hit done", req.params.id)
+  const student = await Student.findById(req.params.id).populate('grade');
+  console.log("jj student", student);
 
   if (!student) {
     return next(new ErrorHandler("Student not found", 404));
@@ -37,7 +38,6 @@ export const getStudentDetails = catchAsyncErrors(async (req, res, next) => {
     student,
   });
 });
-
 // Get students - ADMIN   =>  /api/v1/admin/students
 export const getAdminStudents = catchAsyncErrors(async (req, res, next) => {
   const students = await Student.find();
